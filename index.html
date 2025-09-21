@@ -27,6 +27,46 @@
             transform: translateY(-5px);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
+        .gemini-chat-container {
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-message {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .user-message {
+            background-color: #e0f2fe;
+            align-self: flex-end;
+            text-align: right;
+        }
+        .gemini-message {
+            background-color: #f3f4f6;
+            align-self: flex-start;
+        }
+        .gemini-loading {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            border-top: 4px solid #3b82f6;
+            border-right: 4px solid transparent;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .chatbot-hidden {
+            transform: translateY(100%);
+            opacity: 0;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -82,7 +122,7 @@
                 </div>
             </div>
             <div class="md:w-1/2" data-aos="fade-left">
-                <img src="https://cdn9.dissolve.com/p/D145_52_207/D145_52_207_1200.jpg" alt="Data Wiping Illustration" class="rounded-xl shadow-xl w-full">
+                <img src="https://i.pinimg.com/1200x/57/16/6a/57166a79afaabefac92058fa0b0a2709.jpg" alt="Data Wiping Illustration" class="rounded-xl shadow-xl w-full">
             </div>
         </div>
     </section>
@@ -136,7 +176,7 @@
                             </button>
                         </div>
                         <div class="md:w-1/2 flex justify-center">
-                            <img src="http://static.photos/office/640x360/1" alt="Enterprise Solution" class="rounded-lg shadow-md w-full max-w-md">
+                            <img src="https://i.pinimg.com/736x/81/f0/5b/81f05be765245606313f45d289d48677.jpg" class="rounded-lg shadow-md w-full max-w-md">
                         </div>
                     </div>
                 </div>
@@ -167,7 +207,7 @@
                             </button>
                         </div>
                         <div class="md:w-1/2 flex justify-center">
-                            <img src="http://static.photos/technology/640x360/2" alt="Mobile Solution" class="rounded-lg shadow-md w-full max-w-md">
+                            <img src="https://i.pinimg.com/736x/c0/0d/4a/c00d4a1bf6e557c6f55f4f767b3ed36c.jpg" alt="Mobile Solution" class="rounded-lg shadow-md w-full max-w-md">
                         </div>
                     </div>
                 </div>
@@ -198,7 +238,7 @@
                             </button>
                         </div>
                         <div class="md:w-1/2 flex justify-center">
-                            <img src="http://static.photos/technology/640x360/3" alt="ITAD Solution" class="rounded-lg shadow-md w-full max-w-md">
+                            <img src="https://www.ecyclesolutions.com/wp-content/uploads/2025/01/What-Is-ITAD-and-Why-Does-It-Matter-for-Your-Business.jpg" alt="ITAD Solution" class="rounded-lg shadow-md w-full max-w-md">
                         </div>
                     </div>
                 </div>
@@ -250,7 +290,9 @@
                 <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all" data-aos="fade-up" data-aos-delay="300">
                     <div class="p-6">
                         <div class="w-16 h-16 gradient-bg rounded-lg flex items-center justify-center mb-6">
-                            <i data-feather="usb" class="w-8 h-8 text-white"></i>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 text-white">
+                                <path d="M10 12h4m-2-2v4m10 0a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm-2 2h0m-4-6V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2h-8a2 2 0 0 1-2-2v-6m-4 0H2"></path>
+                            </svg>
                         </div>
                         <h3 class="text-xl font-bold text-gray-900 mb-3">Bootable USB</h3>
                         <p class="text-gray-600 mb-6">
@@ -330,12 +372,25 @@
                     <div class="w-12 h-12 gradient-bg rounded-lg flex items-center justify-center mb-6">
                         <i data-feather="cloud-off" class="w-6 h-6 text-white"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-3">Offline Operation</h3>
+                    <h3 class="text-xl font-bold text-gray-300 mb-3">Offline Operation</h3>
                     <p class="text-gray-600">
                         Works without internet access for maximum security in sensitive environments.
                     </p>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Verification Section -->
+    <section id="verification" class="py-20 px-4">
+        <div class="container mx-auto text-center" data-aos="fade-up">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Verify a Destruction Certificate</h2>
+            <p class="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
+                Confirm the authenticity of a data destruction certificate by entering its unique code or scanning the QR code.
+            </p>
+            <button id="verifyBtn" class="bg-white border border-blue-600 text-blue-600 px-8 py-3 rounded-full font-medium hover:bg-blue-50 transition-all flex items-center justify-center mx-auto">
+                <i data-feather="search" class="w-5 h-5 mr-2"></i> Verify Now
+            </button>
         </div>
     </section>
 
@@ -480,14 +535,71 @@
         </div>
     </div>
 
+    <!-- Verification Modal -->
+    <div id="verificationModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-50 p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full max-h-screen overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-gray-900">Verify Your Device</h3>
+                    <button id="closeVerificationBtn" class="text-gray-500 hover:text-gray-700">
+                        <i data-feather="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+                <form id="verificationForm" class="space-y-6">
+                    <div>
+                        <label for="verificationCode" class="block text-sm font-medium text-gray-700 mb-1">Verification Code</label>
+                        <input type="text" id="verificationCode" name="verificationCode" placeholder="e.g., TW-123456789" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="text-center text-gray-500 text-sm">- OR -</div>
+                    <div>
+                        <label for="qrCodeFile" class="block text-sm font-medium text-gray-700 mb-1">Upload QR Code Image</label>
+                        <input type="file" id="qrCodeFile" name="qrCodeFile" accept="image/*" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="pt-4">
+                        <button type="submit" class="w-full gradient-bg text-white px-6 py-3 rounded-lg font-medium hover:opacity-90 transition-all">
+                            Verify Destruction
+                        </button>
+                    </div>
+                    <div id="verificationResult" class="hidden p-4 rounded-lg text-center font-medium"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: Floating Chatbot Button -->
+    <button id="openChatbotBtn" class="fixed bottom-4 right-4 z-50 w-16 h-16 gradient-bg rounded-full shadow-lg flex items-center justify-center text-white hover:scale-105 transition-all duration-300 ease-in-out">
+        <i data-feather="message-circle" class="w-8 h-8"></i>
+    </button>
+    
+    <!-- NEW: Gemini Chatbot Modal (fixed position) -->
+    <div id="geminiChatbot" class="fixed inset-x-4 bottom-4 w-96 max-h-[80vh] z-50 flex flex-col bg-white rounded-xl shadow-2xl transition-all duration-300 ease-in-out chatbot-hidden">
+        <div class="p-6 flex-shrink-0 flex justify-between items-center border-b border-gray-200">
+            <h3 class="text-xl font-bold text-gray-900">AI Compliance Assistant</h3>
+            <button id="closeChatbotBtn" class="text-gray-500 hover:text-gray-700">
+                <i data-feather="x" class="w-6 h-6"></i>
+            </button>
+        </div>
+        <div id="chat-window" class="gemini-chat-container flex-grow p-4">
+            <div class="chat-message gemini-message">
+                Welcome! I'm your AI compliance assistant. I can help you understand data security regulations and draft policies. How can I assist you today?
+            </div>
+        </div>
+        <form id="chat-form" class="flex p-4 flex-shrink-0 border-t border-gray-200">
+            <input type="text" id="chat-input" placeholder="Ask a question or request a policy..." class="flex-grow px-4 py-2 border border-gray-300 rounded-full focus:ring-blue-500 focus:border-blue-500 mr-2">
+            <button type="submit" class="w-10 h-10 flex-shrink-0 gradient-bg text-white rounded-full flex items-center justify-center hover:opacity-90 transition-all">
+                <i data-feather="send" class="w-5 h-5"></i>
+            </button>
+        </form>
+    </div>
+
     <!-- Success Modal -->
     <div id="successModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-50 p-4">
         <div class="bg-white rounded-xl shadow-2xl max-w-md w-full">
             <div class="p-8 text-center">
-                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div id="successIcon" class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <i data-feather="check" class="w-8 h-8 text-green-500"></i>
                 </div>
-                <h3 class="text-2xl font-bold text-gray-900 mb-4">Thank You!</h3>
+                <h3 id="successTitle" class="text-2xl font-bold text-gray-900 mb-4">Thank You!</h3>
                 <p class="text-gray-600 mb-6" id="successMessage">
                     Your request has been submitted successfully. We'll contact you shortly.
                 </p>
@@ -632,6 +744,23 @@
         const closeVideoBtn = document.getElementById('closeVideoBtn');
         const videoFrame = document.getElementById('videoFrame');
 
+        // Verification modal functionality
+        const verifyBtn = document.getElementById('verifyBtn');
+        const verificationModal = document.getElementById('verificationModal');
+        const closeVerificationBtn = document.getElementById('closeVerificationBtn');
+        const verificationForm = document.getElementById('verificationForm');
+        const verificationResult = document.getElementById('verificationResult');
+
+        // NEW: Gemini Chatbot functionality
+        const openChatbotBtn = document.getElementById('openChatbotBtn');
+        const geminiChatbot = document.getElementById('geminiChatbot');
+        const closeChatbotBtn = document.getElementById('closeChatbotBtn');
+        const chatWindow = document.getElementById('chat-window');
+        const chatForm = document.getElementById('chat-form');
+        const chatInput = document.getElementById('chat-input');
+        const apiKey = '';
+        let chatHistory = [];
+
         // Open form modal
         function openFormModal(solution = '', product = '') {
             document.getElementById('selectedSolution').value = solution;
@@ -667,16 +796,59 @@
             videoModal.classList.add('hidden');
             document.body.style.overflow = 'auto';
         }
+        
+        // Open verification modal
+        function openVerificationModal() {
+            verificationModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close verification modal
+        function closeVerificationModal() {
+            verificationModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            // Reset the form and result message on close
+            verificationForm.reset();
+            verificationResult.textContent = '';
+            verificationResult.classList.add('hidden');
+        }
+
+        // NEW: Toggle Gemini chatbot visibility
+        function toggleChatbot() {
+            geminiChatbot.classList.toggle('chatbot-hidden');
+            if (!geminiChatbot.classList.contains('chatbot-hidden')) {
+                chatInput.focus();
+            }
+        }
 
         // Open success modal
-        function openSuccessModal(message, showDownload = false, downloadUrl = '#') {
+        function openSuccessModal(message, showDownload = false, downloadUrl = '#', isSuccess = true) {
             successMessage.textContent = message;
+            
             if (showDownload) {
                 downloadLinks.classList.remove('hidden');
                 downloadBtn.href = downloadUrl;
             } else {
                 downloadLinks.classList.add('hidden');
             }
+
+            // Update icon and title based on success/failure
+            const successIcon = document.getElementById('successIcon');
+            const successTitle = document.getElementById('successTitle');
+
+            if (isSuccess) {
+                successIcon.innerHTML = `<i data-feather="check" class="w-8 h-8 text-green-500"></i>`;
+                successIcon.classList.remove('bg-red-100');
+                successIcon.classList.add('bg-green-100');
+                successTitle.textContent = 'Success!';
+            } else {
+                successIcon.innerHTML = `<i data-feather="x" class="w-8 h-8 text-red-500"></i>`;
+                successIcon.classList.remove('bg-green-100');
+                successIcon.classList.add('bg-red-100');
+                successTitle.textContent = 'Verification Failed';
+            }
+            
+            feather.replace();
             successModal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         }
@@ -711,13 +883,22 @@
         howItWorksBtn.addEventListener('click', openVideoModal);
         closeVideoBtn.addEventListener('click', closeVideoModal);
 
+        // Add event listeners for verification portal
+        verifyBtn.addEventListener('click', openVerificationModal);
+        closeVerificationBtn.addEventListener('click', closeVerificationModal);
+
+        // NEW: Add event listeners for Gemini chatbot
+        openChatbotBtn.addEventListener('click', toggleChatbot);
+        closeChatbotBtn.addEventListener('click', toggleChatbot);
+
         // Close modals when clicking outside
-        [formModal, videoModal, successModal].forEach(modal => {
+        [formModal, videoModal, successModal, verificationModal].forEach(modal => {
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) {
                     if (modal === formModal) closeFormModal();
                     if (modal === videoModal) closeVideoModal();
                     if (modal === successModal) closeSuccessModal();
+                    if (modal === verificationModal) closeVerificationModal();
                 }
             });
         });
@@ -771,10 +952,47 @@
             }
             
             // Show success modal
-            openSuccessModal(message, showDownload, downloadUrl);
+            openSuccessModal(message, showDownload);
             
             // Reset form
             dataForm.reset();
+        });
+
+        // Verification form submission handler
+        verificationForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const verificationCode = document.getElementById('verificationCode').value;
+            const qrCodeFile = document.getElementById('qrCodeFile').files[0];
+            
+            verificationResult.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
+
+            if (verificationCode) {
+                // Simulate verification based on code
+                if (verificationCode.toUpperCase() === 'TW-12345') {
+                    verificationResult.textContent = 'Verification successful! Certificate is valid.';
+                    verificationResult.classList.add('bg-green-100', 'text-green-800');
+                    openSuccessModal('Verification successful! The data destruction certificate for this device is valid.', false, '#', true);
+                } else {
+                    verificationResult.textContent = 'Verification failed. Certificate not found or invalid.';
+                    verificationResult.classList.add('bg-red-100', 'text-red-800');
+                    openSuccessModal('Verification failed. The provided certificate code is invalid or does not exist.', false, '#', false);
+                }
+            } else if (qrCodeFile) {
+                // For a real app, you would process the file here
+                verificationResult.textContent = 'QR Code uploaded. Simulating verification...';
+                verificationResult.classList.add('bg-blue-100', 'text-blue-800');
+
+                // Simulate a successful verification after a delay
+                setTimeout(() => {
+                    openSuccessModal('Verification successful! The data destruction certificate for this device is valid.', false, '#', true);
+                }, 1000); // Wait 1 second before showing success
+            } else {
+                verificationResult.textContent = 'Please enter a verification code or upload a QR code.';
+                verificationResult.classList.add('bg-red-100', 'text-red-800');
+            }
+
+            closeVerificationModal();
         });
 
         // Smooth scrolling for navigation links
@@ -797,6 +1015,70 @@
                 }
             });
         });
+
+        // NEW: Gemini API integration
+        async function callGeminiAPI(userPrompt) {
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+            const systemPrompt = "You are an expert in data security and regulatory compliance. Provide concise and accurate information, or draft professional-grade data destruction policies. Your tone should be authoritative and helpful.";
+            
+            const payload = {
+                contents: chatHistory.concat([{ parts: [{ text: userPrompt }] }]),
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                }
+            };
+
+            const spinner = document.createElement('div');
+            spinner.className = 'gemini-loading mt-4';
+            chatWindow.appendChild(spinner);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates.length > 0 && result.candidates[0].content && result.candidates[0].content.parts && result.candidates[0].content.parts.length > 0) {
+                    const geminiText = result.candidates[0].content.parts[0].text;
+                    chatHistory.push({ role: 'user', parts: [{ text: userPrompt }] });
+                    chatHistory.push({ role: 'model', parts: [{ text: geminiText }] });
+                    appendMessage(geminiText, 'gemini-message');
+                } else {
+                    appendMessage('An error occurred. Please try again.', 'gemini-message');
+                }
+            } catch (error) {
+                console.error('API Error:', error);
+                appendMessage('Failed to connect to the assistant. Please try again later.', 'gemini-message');
+            } finally {
+                chatWindow.removeChild(spinner);
+            }
+        }
+
+        function appendMessage(text, className) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${className}`;
+            messageDiv.innerHTML = text.replace(/\n/g, '<br>'); // Handle newlines
+            chatWindow.appendChild(messageDiv);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        async function sendPrompt(prompt) {
+            if (prompt.trim() === '') return;
+            appendMessage(prompt, 'user-message');
+            chatInput.value = '';
+            await callGeminiAPI(prompt);
+        }
+
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userPrompt = chatInput.value;
+            await sendPrompt(userPrompt);
+        });
+
+        feather.replace();
     </script>
 </body>
 </html>
