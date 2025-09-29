@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrustWipe Mobile</title>
+    <style>
+        /* Base styles for mobile view */
+        body {
+            background-color: #f0f2f5;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .mobile-frame {
+            width: 100%;
+            max-width: 400px; /* Standard phone width simulation */
+            height: 90vh;
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        /* Status Bar (New) */
+        .status-bar {
+            background-color: #fff;
+            padding: 5px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .status-bar i {
+            font-size: 12px;
+            margin-left: 4px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #4a90e2;
+            color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-logo {
+            height: 24px;
+            margin-right: 10px;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            flex-grow: 1;
+        }
+
+        .help-icon {
+            font-size: 18px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+            padding-bottom: 0; /* Adjusted padding as nav handles space */
+            box-sizing: border-box;
+        }
+
+        .content-section {
+            display: none;
+            flex-direction: column;
+            min-height: 100%; /* Ensure content fills space for proper scrolling */
+            padding-bottom: 20px; /* Add internal padding for scrolling room */
+        }
+
+        .drive-list {
+            margin-top: 10px;
+        }
+
+        .drive-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .drive-item input[type="checkbox"] {
+            margin-right: 15px;
+            transform: scale(1.1);
+        }
+
+        .drive-details {
+            display: none;
+            flex-direction: column;
+            background-color: #f7f7f7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .erase-button {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #e74c3c;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: opacity 0.3s;
+            opacity: 0.4;
+            margin-top: 20px;
+        }
+
+        .erase-button.active {
+            opacity: 1;
+        }
+        
+        /* Modal (Confirmation) */
+        .modal {
+            display: none;
+            position: absolute; /* Correctly positioned relative to .mobile-frame */
+            z-index: 20;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 25px;
+            margin: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            text-align: center;
+            width: 80%;
+        }
+
+        .modal-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+        }
+        
+        .modal-button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .modal-yes { background-color: #2ecc71; color: #fff; }
+        .modal-no { background-color: #bdc3c7; color: #333; }
+        
+        /* Progress View */
+        .progress-view {
+            padding: 20px;
+        }
+
+        .progress-header {
+            margin-bottom: 20px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-bar {
+            width: 0;
+            height: 100%;
+            background-color: #4a90e2;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .steps-container {
+            width: 100%;
+        }
+        
+        .step-card {
+            background-color: #f7f7f7;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: background-color 0.5s, border-color 0.5s;
+        }
+
+        .step-card.completed {
+            background-color: #e8f5e9;
+            border-color: #2ecc71;
+        }
+
+        .step-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+        }
+
+        .step-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #ccc;
+            position: relative;
+            transition: border-color 0.5s;
+        }
+
+        .step-card.completed .step-icon {
+            background-color: #2ecc71;
+            border-color: #2ecc71;
+        }
+
+        .step-icon::before {
+            content: '\2714';
+            font-size: 16px;
+            color: #fff;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .step-card.completed .step-icon::before {
+            opacity: 1;
+        }
+        
+        .step-content {
+            display: none;
+            padding-left: 30px; 
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .step-card.active .step-content {
+            display: block;
+        }
+        
+        /* Final Report */
+        .final-report {
+            text-align: center;
+        }
+
+        .final-message-box {
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #2ecc71;
+            background-color: #e8f5e9;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .report-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .report-button {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+        }
+        
+        .download-button { background-color: #4a90e2; color: #fff; }
+        .certificate-button { background-color: #2ecc71; color: #fff; }
+
+        /* Bottom Tab Bar */
+        .bottom-nav {
+            width: 100%;
+            height: 60px;
+            background-color: #fff;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+            z-index: 10;
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            cursor: pointer;
+            padding: 5px 0;
+            color: #777;
+            transition: color 0.2s;
+            font-size: 12px;
+        }
+
+        .nav-item i {
+            font-size: 20px;
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .nav-item.active {
+            color: #4a90e2;
+        }
+
+        /* Home Indicator (New) */
+        .home-indicator {
+            width: 100%;
+            height: 15px; /* Common size for indicator bar */
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 5px;
+        }
+        
+        .home-indicator-bar {
+            width: 100px;
+            height: 4px;
+            background-color: #333;
+            border-radius: 2px;
+        }
+        
+        /* Settings and Advance Options */
+        .setting-group {
+            margin-bottom: 20px;
+        }
+        .setting-group label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- Load Font Awesome for Icons -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+<div class="mobile-frame" id="mobileFrame">
+    
+    <!-- New: Status Bar -->
+    <div class="status-bar">
+        <span>9:41 AM</span>
+        <div>
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi" style="margin-left: 8px;"></i>
+            <span style="margin-left: 8px;">100%</span>
+            <i class="fas fa-battery-full"></i>
+        </div>
+    </div>
+
+    <div class="header">
+        <img src="https://placehold.co/24x24/ffffff/4a90e2?text=TW" alt="TrustWipe Logo" class="header-logo">
+        <div class="header-title" id="selectedOptionText">Erase Drive</div>
+        <div class="help-icon" id="helpIcon"><i class="fas fa-question-circle"></i></div>
+    </div>
+
+    <div class="main-content" id="mainContent">
+        
+        <!-- 1. Erase Drive View (Default) -->
+        <div class="content-section" id="eraseDriveContent" style="display: flex;">
+            <h3>Select Drive for Erase</h3>
+            <div class="drive-list" id="driveList">
+                <div class="drive-item">
+                    <input type="checkbox" id="drive1" name="drive" data-details='{"name": "Internal Storage", "type": "eMMC/UFS", "capacity": "256GB", "health": "Good", "serial": "PHONE-INT-256G-ABCD"}'>
+                    <label for="drive1">Internal Storage (256GB)</label>
+                </div>
+                <div class="drive-item">
+                    <input type="checkbox" id="drive2" name="drive" data-details='{"name": "SD Card", "type": "External SD", "capacity": "128GB", "health": "Good", "serial": "SDCARD-128G-WXYZ"}'>
+                    <label for="drive2">SD Card (128GB)</label>
+                </div>
+                <div class="drive-item">
+                    <input type="checkbox" id="drive3" name="drive" data-details='{"name": "Tablet Internal", "type": "eMMC/UFS", "capacity": "512GB", "health": "Excellent", "serial": "TABLET-INT-512G-1234"}'>
+                    <label for="drive3">Tablet Internal Storage (512GB)</label>
+                </div>
+            </div>
+
+            <div class="drive-details" id="driveDetails">
+                <h4>Preview Details</h4>
+                <div id="detailsContent"></div>
+            </div>
+
+            <button class="erase-button" id="eraseButton">Erase Now</button>
+        </div>
+
+        <!-- 2. Advanced Options Content -->
+        <div class="content-section" id="advanceOptionsContent">
+            <h3>Advanced Wipe Settings</h3>
+            <p style="font-size: 14px; color: #555;">Customize your secure erasure process.</p>
+            <div class="setting-group">
+                <label for="wipe-method">Wipe Method:</label>
+                <select id="wipe-method" style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ccc;">
+                    <option>Crypto Erase (eMMC/UFS Secure Erase)</option>
+                    <option>NIST 800-88</option>
+                    <option>DoD 5220.22-M</option>
+                    <option>Gutmann (35 Passes)</option>
+                </select>
+            </div>
+            <div class="setting-group">
+                <label for="passes">Number of Passes:</label>
+                <input type="number" id="passes" value="1" min="1" style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ccc;">
+            </div>
+            <div class="setting-group">
+                <label>Verification:</label>
+                <div style="margin-top: 8px;">
+                    <input type="checkbox" id="verify-wipe" checked>
+                    <label for="verify-wipe" style="font-weight: normal;">Verify wipe after completion</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Settings Content -->
+        <div class="content-section" id="settingsContent">
+            <h3>Application Settings</h3>
+            <div class="setting-group">
+                <label for="language">Language:</label>
+                <select id="language" style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ccc;">
+                    <option>English</option>
+                    <option>Spanish</option>
+                    <option>French</option>
+                </select>
+            </div>
+            <div class="setting-group">
+                <label for="theme">Theme:</label>
+                <select id="theme" style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ccc;">
+                    <option>Light</option>
+                    <option>Dark</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 4. Reports Content -->
+        <div class="content-section" id="reportsContent">
+            <h3>Report & Certificate History</h3>
+            <p style="font-size: 14px; color: #555;">Access records for all completed wipes.</p>
+            <div style="border: 1px solid #ccc; border-radius: 8px; padding: 15px; margin-bottom: 15px;">
+                <div style="font-weight: bold;">Internal Storage Wipe</div>
+                <div style="font-size: 12px; color: #777;">Date: Sep 22, 2025 | Method: eMMC/UFS Secure Erase</div>
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button class="report-button download-button" style="width: 50%; padding: 8px;" onclick="downloadReport('Internal Storage Report')">Report</button>
+                    <button class="report-button certificate-button" style="width: 50%; padding: 8px;" onclick="viewCertificate('Internal Storage')">Certificate</button>
+                </div>
+            </div>
+             <div style="border: 1px solid #ccc; border-radius: 8px; padding: 15px; margin-bottom: 15px;">
+                <div style="font-weight: bold;">SD Card Wipe</div>
+                <div style="font-size: 12px; color: #777;">Date: Sep 20, 2025 | Method: DoD 5220.22-M</div>
+                <div style="display: flex; gap: 10px; margin-top: 10px;">
+                    <button class="report-button download-button" style="width: 50%; padding: 8px;" onclick="downloadReport('SD Card Report')">Report</button>
+                    <button class="report-button certificate-button" style="width: 50%; padding: 8px;" onclick="viewCertificate('SD Card')">Certificate</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Progress View -->
+        <div class="content-section progress-view" id="progressContent">
+            <div class="progress-header" style="width: 100%; text-align: left;">
+                <h3 id="progressDriveName" style="margin-bottom: 5px;">Erasing Internal Storage (256GB)</h3>
+                <div style="display: flex; justify-content: space-between; font-size: 12px; color: #555;">
+                    <span id="progressTime">Started: --:-- --</span>
+                    <span id="progressRemaining">Estimated remaining: -- min</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+            </div>
+            
+            <div class="steps-container" style="padding-top: 10px;">
+                <div class="step-card" id="step1Card">
+                    <div class="step-title">
+                        <span class="step-icon"></span>
+                        <h4>Pre-Wipe Check</h4>
+                    </div>
+                    <div class="step-content">
+                        <div class="log-line">Drive detected and health check complete.</div>
+                        <div class="log-line">Encryption and security features verified.</div>
+                    </div>
+                </div>
+                <div class="step-card" id="step2Card">
+                    <div class="step-title">
+                        <span class="step-icon"></span>
+                        <h4>Method Selection</h4>
+                    </div>
+                    <div class="step-content">
+                        <div class="log-line">Recommended method confirmed.</div>
+                        <div class="log-line">Method initialized.</div>
+                    </div>
+                </div>
+                <div class="step-card" id="step3Card">
+                    <div class="step-title">
+                        <span class="step-icon"></span>
+                        <h4>Wiping...</h4>
+                    </div>
+                    <div class="step-content">
+                        <div class="log-line">Sending secure erase command...</div>
+                        <div class="log-line">Waiting for device to respond...</div>
+                        <div class="log-line">Secure erase in progress...</div>
+                        <div class="log-line">Monitoring completion status...</div>
+                    </div>
+                </div>
+                <div class="step-card" id="step4Card">
+                    <div class="step-title">
+                        <span class="step-icon"></span>
+                        <h4>Verification</h4>
+                    </div>
+                    <div class="step-content">
+                        <div class="log-line">Wipe confirmed (eMMC/UFS flag set).</div>
+                        <div class="log-line">Verification completed successfully.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 6. Final Report View -->
+        <div class="content-section final-report" id="finalReportContent">
+            <div class="final-message-box">
+                <div style="font-size: 50px; color: #2ecc71;">&#10004;</div>
+                <h2 style="color: #2ecc71; margin: 10px 0; font-size: 20px;">Wipe Completed Successfully!</h2>
+                <p style="font-size: 14px;">All data on selected drives has been securely erased and verified according to industry standards.</p>
+                <div class="report-buttons">
+                    <button class="report-button download-button" id="downloadFinalReport">Download Report(s)</button>
+                    <button class="report-button certificate-button" id="viewFinalCertificate">View Blockchain Certificate</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="nav-item active" data-nav="erase-drive">
+            <i class="fas fa-trash-alt"></i>
+            <span>Erase</span>
+        </div>
+        <div class="nav-item" data-nav="advance-options">
+            <i class="fas fa-cogs"></i>
+            <span>Advance</span>
+        </div>
+        <div class="nav-item" data-nav="settings">
+            <i class="fas fa-sliders-h"></i>
+            <span>Settings</span>
+        </div>
+        <div class="nav-item" data-nav="reports">
+            <i class="fas fa-file-contract"></i>
+            <span>Reports</span>
+        </div>
+    </div>
+
+    <!-- New: Home Indicator -->
+    <div class="home-indicator">
+        <div class="home-indicator-bar"></div>
+    </div>
+
+    <!-- Confirmation Modal (MOVED INSIDE mobile-frame) -->
+    <div class="modal" id="confirmationModal">
+        <div class="modal-content">
+            <h3 style="color: #e74c3c;">WARNING</h3>
+            <p style="font-size: 14px;">Are you sure you want to erase the selected drive(s)? This action is permanent and cannot be undone.</p>
+            <div class="modal-buttons">
+                <button class="modal-button modal-yes" id="yesButton">Yes, Erase</button>
+                <button class="modal-button modal-no" id="noButton">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const frame = document.getElementById('mobileFrame');
+        const eraseButton = document.getElementById('eraseButton');
+        const driveCheckboxes = document.querySelectorAll('input[name="drive"]');
+        const confirmationModal = document.getElementById('confirmationModal');
+        const yesButton = document.getElementById('yesButton');
+        const noButton = document.getElementById('noButton');
+        const selectedOptionText = document.getElementById('selectedOptionText');
+
+        const allContentSections = document.querySelectorAll('.content-section');
+        const navItems = document.querySelectorAll('.nav-item');
+
+        const eraseDriveContent = document.getElementById('eraseDriveContent');
+        const progressContent = document.getElementById('progressContent');
+        const finalReportContent = document.getElementById('finalReportContent');
+        const advanceOptionsContent = document.getElementById('advanceOptionsContent');
+        const settingsContent = document.getElementById('settingsContent');
+        const reportsContent = document.getElementById('reportsContent');
+
+        const progressBar = document.getElementById('progressBar');
+        const progressDriveName = document.getElementById('progressDriveName');
+        const progressTime = document.getElementById('progressTime');
+        const progressRemaining = document.getElementById('progressRemaining');
+        const driveDetailsSection = document.getElementById('driveDetails');
+        const detailsContent = document.getElementById('detailsContent');
+        const downloadFinalReportButton = document.getElementById('downloadFinalReport');
+        const viewFinalCertificateButton = document.getElementById('viewFinalCertificate');
+
+        let animationFrameId;
+        const totalDuration = 10000; // 10 seconds
+        let startTime;
+        
+        const progressSteps = [
+            { title: 'Pre-Wipe Check', duration: 2000, cardId: 'step1Card' },
+            { title: 'Method Selected', duration: 2000, cardId: 'step2Card' },
+            { title: 'Wiping...', duration: 4000, cardId: 'step3Card' },
+            { title: 'Verification', duration: 1000, cardId: 'step4Card' }
+        ];
+        
+        // --- Status Bar Time Update ---
+        function updateStatusBarTime() {
+            const timeElement = document.querySelector('.status-bar span:first-child');
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const formattedHours = (hours % 12) || 12;
+            const timeString = `${formattedHours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+            if (timeElement) {
+                timeElement.textContent = timeString;
+            }
+        }
+        updateStatusBarTime();
+        setInterval(updateStatusBarTime, 60000); // Update every minute
+
+        // --- Navigation Logic ---
+        function showScreen(screenId, optionName) {
+            allContentSections.forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById(screenId).style.display = 'flex';
+            selectedOptionText.textContent = optionName;
+            document.getElementById('mainContent').scrollTop = 0; // Scroll to top on navigation
+
+            if (screenId === 'eraseDriveContent') {
+                updateUIState();
+            }
+        }
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+                
+                const optionType = item.getAttribute('data-nav');
+                const optionName = item.querySelector('span').textContent + (optionType === 'erase-drive' ? ' Drive' : '');
+
+                let screenId;
+                switch(optionType) {
+                    case 'erase-drive': screenId = 'eraseDriveContent'; break;
+                    case 'advance-options': screenId = 'advanceOptionsContent'; break;
+                    case 'settings': screenId = 'settingsContent'; break;
+                    case 'reports': screenId = 'reportsContent'; break;
+                }
+                showScreen(screenId, optionName);
+            });
+        });
+        
+        // --- Erase Drive Logic ---
+        function updateUIState() {
+            const selectedDrives = Array.from(driveCheckboxes).filter(checkbox => checkbox.checked);
+            const isAnyDriveChecked = selectedDrives.length > 0;
+            
+            if (isAnyDriveChecked) {
+                eraseButton.classList.add('active');
+                driveDetailsSection.style.display = 'flex';
+                displayDriveDetails(selectedDrives);
+            } else {
+                eraseButton.classList.remove('active');
+                driveDetailsSection.style.display = 'none';
+                detailsContent.innerHTML = '';
+            }
+        }
+
+        function displayDriveDetails(selectedDrives) {
+            let detailsHtml = '';
+            selectedDrives.forEach(drive => {
+                const details = JSON.parse(drive.dataset.details);
+                detailsHtml += `
+                    <div style="margin-bottom: 5px; font-size: 13px;">
+                        <strong style="color: #4a90e2;">${details.name} (${details.capacity})</strong><br>
+                        Type: ${details.type} | Health: ${details.health}
+                    </div>
+                `;
+            });
+            detailsContent.innerHTML = detailsHtml;
+        }
+        
+        driveCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateUIState);
+            checkbox.parentNode.addEventListener('click', (e) => {
+                if (e.target.type !== 'checkbox') {
+                    checkbox.checked = !checkbox.checked;
+                    updateUIState();
+                }
+            });
+        });
+
+        updateUIState();
+
+        eraseButton.addEventListener('click', () => {
+            if (eraseButton.classList.contains('active')) {
+                confirmationModal.style.display = 'flex';
+            }
+        });
+
+        noButton.addEventListener('click', () => {
+            confirmationModal.style.display = 'none';
+        });
+
+        yesButton.addEventListener('click', () => {
+            confirmationModal.style.display = 'none';
+            showScreen('progressContent', 'Erasing Drive...');
+            startWipeSimulation();
+        });
+
+        // --- Time Formatting ---
+        function formatTimeWithAmPm(date) {
+            let hours = date.getHours();
+            const minutes = date.getMinutes();
+            const ampm = hours >= 12 ? 'pm' : 'am';
+            hours = hours % 12;
+            hours = hours ? hours : 12; 
+            const minutesStr = minutes < 10 ? '0'+minutes : minutes;
+            return hours + ':' + minutesStr + ' ' + ampm;
+        }
+
+        // --- Wipe Animation Logic ---
+        function startWipeSimulation() {
+            startTime = Date.now();
+            progressBar.style.width = '0%';
+            
+            // Dynamically set drive name for progress based on selection (or default)
+            const selectedDrives = Array.from(driveCheckboxes).filter(checkbox => checkbox.checked);
+            let driveName = "Internal Storage"; // Default name
+            if (selectedDrives.length > 0) {
+                const details = JSON.parse(selectedDrives[0].dataset.details);
+                driveName = `${details.name} (${details.capacity})`;
+            }
+            progressDriveName.textContent = `Erasing ${driveName}`;
+            progressTime.textContent = `Started: ${formatTimeWithAmPm(new Date())}`;
+
+            let currentStepIndex = 0;
+            let stepStartTime = Date.now();
+            const stepCards = document.querySelectorAll('.step-card');
+            
+            stepCards.forEach(card => {
+                card.classList.remove('completed', 'active');
+                card.querySelector('.step-content').style.display = 'none';
+            });
+            
+            // Start the first step immediately
+            const firstCard = document.getElementById(progressSteps[0].cardId);
+            firstCard.classList.add('active');
+            firstCard.querySelector('.step-content').style.display = 'block';
+
+            const animate = () => {
+                const elapsedSinceStart = Date.now() - startTime;
+                const totalProgress = Math.min(100, (elapsedSinceStart / totalDuration) * 100);
+                progressBar.style.width = `${totalProgress}%`;
+
+                const remainingMs = Math.max(0, totalDuration - elapsedSinceStart);
+                const remainingMin = Math.floor(remainingMs / 60000);
+                const remainingSec = Math.floor((remainingMs % 60000) / 1000);
+                progressRemaining.textContent = `Estimated remaining: ${remainingMin}:${remainingSec.toString().padStart(2, '0')}`;
+                
+                if (currentStepIndex < progressSteps.length) {
+                    const currentStep = progressSteps[currentStepIndex];
+                    const card = document.getElementById(currentStep.cardId);
+
+                    if (card.classList.contains('active') && (Date.now() - stepStartTime) >= currentStep.duration) {
+                        card.classList.remove('active');
+                        card.classList.add('completed');
+                        currentStepIndex++;
+                        stepStartTime = Date.now();
+                        
+                        if (currentStepIndex < progressSteps.length) {
+                            const nextCard = document.getElementById(progressSteps[currentStepIndex].cardId);
+                            nextCard.classList.add('active');
+                            nextCard.querySelector('.step-content').style.display = 'block';
+                            // Scroll down to the newly activated step
+                            nextCard.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                        }
+                    }
+                }
+
+                if (totalProgress >= 100) {
+                    cancelAnimationFrame(animationFrameId);
+                    setTimeout(showFinalReport, 1000);
+                } else {
+                    animationFrameId = requestAnimationFrame(animate);
+                }
+            };
+            
+            animationFrameId = requestAnimationFrame(animate);
+        }
+
+        function showFinalReport() {
+            navItems.forEach(nav => nav.classList.remove('active'));
+            document.querySelector('[data-nav="reports"]').classList.add('active');
+            showScreen('finalReportContent', 'Wipe Report');
+        }
+
+        // --- Report/Certificate Logic (Dummy content) ---
+
+        downloadFinalReportButton.addEventListener('click', () => {
+            window.downloadReport('Internal Storage Combined');
+        });
+
+        viewFinalCertificateButton.addEventListener('click', () => {
+            window.viewCertificate('Internal Storage');
+        });
+
+        window.downloadReport = function(reportName) {
+            const reportContent = `
+TrustWipe Erase Report
+
+---------------------------------------------------------
+Report Date: ${new Date().toLocaleDateString()}
+Software Version: TrustWipe Prototype v1.0
+Drive: ${reportName}
+---------------------------------------------------------
+
+Wipe Process Details:
+Method: Crypto Erase (eMMC/UFS Secure Erase)
+Status: Completed Successfully
+Verification: Verified (All blocks are zeroed out)
+Time Taken: 10 seconds
+
+---------------------------------------------------------
+This is a dummy report generated by the TrustWipe prototype.
+            `;
+            const blob = new Blob([reportContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${reportName.replace(/ /g, '_')}_Report.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        window.viewCertificate = function(driveName) {
+            const certificateContent = `
+TrustWipe Blockchain Certificate
+
+---------------------------------------------------------
+Certificate ID: ABCDEF1234567890
+Status: Valid
+Device Storage Wiped: ${driveName}
+Wipe Method: Crypto Erase
+Date of Wipe: ${new Date().toLocaleDateString()}
+---------------------------------------------------------
+This certificate confirms the secure and irreversible erasure of the specified device storage.
+            `;
+            const newWindow = window.open('', '_blank', 'width=700,height=500');
+            newWindow.document.write(`<pre>${certificateContent}</pre>`);
+            newWindow.document.close();
+        };
+    });
+</script>
+
+</body>
+</html>
